@@ -1,0 +1,13 @@
+---
+- hosts: vps3
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Copy a new resolv configuration file and back up the original, if it differs
+      copy:
+        src: /home/sami/resolv.conf
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes

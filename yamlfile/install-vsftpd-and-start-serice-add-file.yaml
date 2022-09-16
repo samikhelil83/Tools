@@ -1,0 +1,19 @@
+---
+- name: Install ans start the vsftpd service
+  hosts: all
+  tasks: 
+  - name: Install vsftpd
+    yum: 
+        name: vsftpd
+        state: latest
+  - name: Start and enable vsftpd service
+    service: 
+       name: vsftpd 
+       state: started 
+       enabled: yes
+  - name: Create readme file
+    copy:
+            content: "Welcom to the ftp server\n" 
+            dest: /var/ftp/pub/README
+            force: no
+            mode: 0444

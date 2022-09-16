@@ -1,0 +1,41 @@
+---
+- name: Install start and enable httpd
+  hosts: all
+  tasks:
+          - name: install httpd
+            yum: 
+             name: httpd
+             state: latest
+
+          - name: start and enable httpd
+            service:
+             name: httpd
+             state: started
+             enabled: true
+
+
+
+- name: enable firewall and open httpd port
+  hosts: ansible1
+  tasks:
+          - name: enable firewalld
+            service: 
+             name: firewalld
+             state: started
+             enabled: true
+
+          - name: open port httpd
+            firewalld: 
+             service: http
+             permanent: true
+             state: enabled  
+
+
+- name: test httpd access
+  hosts: localhost
+  tasks:
+    - name: test httpd accesssss
+      uri: 
+       url: http://ansible1  
+       return_content: yes
+       status_code: 200 

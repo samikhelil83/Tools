@@ -1,0 +1,13 @@
+---
+- hosts: web40
+  tasks:
+    - name: Replace line in zabbix conf
+      lineinfile:
+         path: /etc/zabbix/zabbix-agentd.conf
+         regexp: '^Server='
+         line: Server=41.226.22.25,41.226.22.26
+    - name: restart zabbix
+      service:
+         name: zabbix-agentd
+         state: restarted
+            

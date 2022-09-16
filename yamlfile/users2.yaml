@@ -1,0 +1,22 @@
+---
+- hosts: vps3
+  gather_facts: no
+  become: yes
+  tasks:
+    - group:
+        gid: 12310
+        name: groupA
+        state: present
+    - group:
+        gid: 12311
+        name: groupB
+        state: present
+    - user:
+        name: user1
+        state: absent
+    - user:
+        name: user2
+        uid: 12427
+        shell: /bin/false
+        password_lock: yes
+        groups: groupA, groupB

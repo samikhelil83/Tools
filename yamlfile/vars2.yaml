@@ -1,0 +1,14 @@
+---
+- name: Install multiple package from file
+  hosts: ansible1
+  vars_files: vars/common
+  tasks:
+          - name: Install {{my_package}} packages
+            yum:
+                    name: "{{my_package}}"
+                    state: present
+
+          - name: start {{my_httpd_service}}
+            service: 
+                name: "{{my_httpd_service}}"
+                state: started           

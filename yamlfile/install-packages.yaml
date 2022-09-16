@@ -1,0 +1,11 @@
+---
+- name: Install namp, httpd and vsftpd
+  hosts: all
+  tasks: 
+  - name: Install packages
+    yum: 
+     name:
+     - nmap       
+     - httpd
+     - vsftpd
+     state: latest  

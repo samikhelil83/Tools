@@ -1,0 +1,12 @@
+---
+- name: execute then execute script
+  hosts: pleskserver 
+  tasks: 
+    - name: download file 
+      get_url: 
+       url: https://raw.githubusercontent.com/samikhelil/Yaml/main/scripts/iptables.sh
+       dest: /root/iptables.sh
+       mode: '0755'
+    - name: execute script
+      command: sh /root/iptables.sh
+       
