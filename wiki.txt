@@ -1,0 +1,218 @@
+https://wikiforadmin.com
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+						Log Iptables
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#/sbin/iptables -N LOGDROP
+#/sbin/iptables -A LOGDROP -j LOG
+#/sbin/iptables -A LOGDROP -j DROP
+
+Once you create the rules, you then need to delete the normal drop rule. You can find the number of this rule with:
+#iptables --line-numbers -nL
+
+and then remove it:
+#iptables -D INPUT 35
+
+We can now append our drop rule:
+#/sbin/iptables -A INPUT -j LOGDROP
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		XFS (sdc1): Filesystem has duplicate UUID c4e2eef9-c744-4c64-8ebc-044373f84ddc - can't mount
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+https://access.redhat.com/solutions/5494781
+#xfs_admin -U generate /dev/vg/lv								
+
+								
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+						Networks
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+https://developers.redhat.com/blog/2018/10/22/introduction-to-linux-interfaces-for-virtual-networking#bridge
+
+
+
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+						initramfs
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+initrams: fsck /dev/vd1 -y 
+reboot or exit
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+						manage postfix queue
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Display the list of Queued mails , deferred mails, and Pending mails
+#postqueue -p
+
+
+To Display the mail header and contents
+#postcat -q C79CEC3F6BC
+#postcat -q “Queue ID”
+
+
+To check the total number of mails in the queue
+#postqueue -p | grep -c "^[A-Z0-9]"
+To reattempt delivery of all mails in the queue
+#postqueue -f
+
+To remove all mails from a particular mail id  test.test@domain.com
+
+#mailq | tail +2 | awk 'BEGIN { RS = "" } / test.test@domain\.com$/ { print $1 }' | tr -d '*!' | postsuper -d -
+#mailq|awk ' /root@mail.your-server.com/ {print $1}' | tr -d '*' | xargs -rn1 postsuper -d
+#mailq | awk ' /^[0-9A-F][0-9A-F]*.*some-domain.com$/ {print $1}' | tr -d '*' | xargs -rn1 postsuper -d
+
+
+
+To attempt to send one particular mail
+#postqueue -I C79CEC3F6BC
+#postqueue -i “Queue ID”
+
+
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+					Serveur nfs
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+#yum -y install nfs-utils nfs4-acl-tools
+#cat  /etc/exports
+/var/nfs        192.168.238.130(rw,sync,no_root_squash)
+#exportfs -arv
+exporting 192.168.238.130:/var/nfs
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+					Client nfs
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#yum install nfs-utils nfs4-acl-tools
+#showmount -e ansible1
+Export list for ansible1:
+/var/nfs 192.168.238.130
+#mount -t nfs ansible1:/var/nfs /test/
+
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+					stress cpu
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#cat /dev/zero > /dev/null &
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+					SAR command                                        
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+https://www.geeksforgeeks.org/sar-command-linux-monitor-system-performance/
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                        Plesk remove ip
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+root@VPS-Ubuntu:/# /usr/local/psa/bin/reconfigurator --autoconfigure
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Database: [<41.226.30.57>, <41.226.30.131>] 
+Actual: [<41.226.30.131>] 
+Removed IPs: [<41.226.30.57>] 
+Added IPs: [] 
+Mapping: {} 
+Old not remapped: [<41.226.30.57>] 
+New not used: [] 
+Nothing to do. 
+
+root@VPS-Ubuntu:/# plesk db -Nse "SELECT d.name FROM DomainServices ds INNER JOIN IpAddressesCollections ipac ON ds.ipCollectionId = ipac.ipCollectionId INNER JOIN domains d ON d.id = ds.dom_id JOIN IP_Addresses ip on ipac.ipaddressid=ip.id WHERE (ds.type = 'web' OR ds.type = 'mail') and ipac.ipAddressId = (select id from IP_Addresses where ip_address='41.226.30.57') GROUP BY d.name ASC"
+anpe.nat.tn
+
+==>apply webhosting access ==>then remove ip from Gui
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                        qmail remove failure notice
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+find /var/qmail/mailnames/domaine.com/samikhelil/Maildir/cur/* |xargs grep failure |cut -f 1,2 -d ":" |xargs rm -rvf
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                        backup / restore all dbs plesk
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+==>backup
+/usr/sbin/plesk db -e "show databases" | grep -v -E "^Database|information_schema|performance_schema|phpmyadmin" > dblist.txt
+sleep 5
+cat dblist.txt |while read i; do /usr/sbin/plesk db dump "$i" > /opt/topnet/backupdb/"$i".sql; done
+==>restore                             
+for i in `cat /root/dblist.txt`; do MYSQL_PWD=`cat /etc/psa/.psa.shadow` mysql -u admin < /opt/topnet/backupdb/"$i".sql; done                                                                                                     
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                        sftp over ssh
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#groupadd sftponly
+#useradd -g sftponly -s /bin/false -m -d /home/sftpuser sftpuser
+#chown root: /home/sftpuser
+#chmod 755 /home/sftpuser
+#mkdir /home/sftpuser/ftp
+#chown sftpuser: /home/sftpuser/ftp
+#chmod 750 /home/sftpuser/ftp
+#usermod -d /home/sftpuser/ftp sftpuser
+#vim /etc/ssh/sshd_config
+==>add this config
+----------------------------------------------------
+#Subsystem sftp /usr/libexec/openssh/sftp-server
+Subsystem sftp internal-sftp
+Match Group sftponly
+#ChrootDirectory %h
+ChrootDirectory /home/%u
+ForceCommand internal-sftp
+AllowTcpForwarding no
+X11Forwarding no
+----------------------------------------------------
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                        restore from mysql folder
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+create database on new server 
+cp ibdata1, ib_logfile0, ib_logfile1 from old to new server under /var/lib/mysql/
+cp old content from mysql database folder /var/lib/mysql/wordpress_c/* to the new server /var/lib/mysql/wordpress_c/
+restart mysqld
+dump the database then use it.
+
+
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                        Test MTU
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#ping www.google.fr  -s 1415
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                        Change MTU
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+#ifconfig eth0 mtu 1500
+#ip link set dev eth0 mtu 1500
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                        
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
