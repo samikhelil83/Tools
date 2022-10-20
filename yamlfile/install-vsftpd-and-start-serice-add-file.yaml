@@ -1,6 +1,7 @@
 ---
 - name: Install ans start the vsftpd service
-  hosts: all
+  hosts: localhost
+  become: yes  
   tasks: 
   - name: Install vsftpd
     yum: 
