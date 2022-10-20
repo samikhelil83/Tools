@@ -1,7 +1,6 @@
 ---
 - name: Install ans start the vsftpd service
   hosts: kalivm
-  become: yes  
   tasks: 
   - name: Install vsftpd
     yum: 
