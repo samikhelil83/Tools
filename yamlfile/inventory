@@ -1,3 +1,2 @@
-[all]
-ansible1
-ansible2
+[servers]
+kalivm

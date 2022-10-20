@@ -1,6 +1,6 @@
 ---
 - name: Install ans start the vsftpd service
-  hosts: localhost
+  hosts: kalivm
   become: yes  
   tasks: 
   - name: Install vsftpd
