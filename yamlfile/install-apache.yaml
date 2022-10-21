@@ -1,9 +1,10 @@
 ---
 - name: install start and enable apache2
-  hosts: vps3
+  hosts: kalivm
+  become: true  
   tasks:
     - name: install package
-      yum:
+      apt:
        name: apache2
        state: latest
     - name: start and enable service
