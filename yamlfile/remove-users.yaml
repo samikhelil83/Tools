@@ -1,0 +1,21 @@
+---
+- name: remove users
+  hosts: kalivm
+  vars:
+    users:
+    - user1
+    - user2
+    - sharon
+    - bill
+    - ashley
+  tasks:
+  - user:
+      name: "{{ item }}"
+      state: absent
+      force: yes
+    loop: "{{ users }}"
+  - file:
+      name: "{{ item }}"
+      state: absent
+      force: yes
+    loop: "{{ users }}"
