@@ -1,7 +1,7 @@
 ---
-- hosts: all
+- hosts: kalivm
   tasks:
           - name: show ip address
             debug:
                     msg: >
-                            this host uses UP address {{ansible_default_ipv4.address}}
+                            this host uses IP address {{ansible_default_ipv4.address}}

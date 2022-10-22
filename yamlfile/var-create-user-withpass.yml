@@ -1,0 +1,11 @@
+---
+- name: create a user with vaulted variables
+  hosts: kalivm
+  become: true
+  vars_files:
+     - secret.yaml
+  tasks:
+  - name: creating user
+    user:
+     name: "{{ user }}"
+     password: "{{ pass }}"

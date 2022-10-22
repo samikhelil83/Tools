@@ -1,6 +1,6 @@
 ---
 - name: Show fact gathering
-  hosts: all
+  hosts: kalivm
   tasks:
           - name: Show all facts
             debug:
