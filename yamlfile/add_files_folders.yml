@@ -1,0 +1,16 @@
+---
+- name: using the file module
+  hosts: kalivm
+    
+  tasks:
+  - name: create directory
+    file:
+      path: /tmp/folder1
+      owner: kali
+      group: kali
+      mode: 770
+      state: directory
+  - name: create file in that directory
+    file:
+      path: /tmp/folder1/file1
+      state: touch
