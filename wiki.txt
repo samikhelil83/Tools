@@ -259,9 +259,9 @@ https://rdr-it.com/joindre-un-ordinateur-a-un-domaine-windows-10-2016/
 https://adamtheautomator.com/samba-active-directory/
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                                        
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+                                       verify cronfile
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+ansible -m shell -a "find /etc/cron.d/*  -exec crontab {} \;" all
 
 
 
