@@ -1,0 +1,12 @@
+---
+- name: 'Cron de maintenance mensuelle automatique'
+  cron:
+    name: 'Installation mensuelle des mises à jour et redémarrage automatique'
+    cron_file: 'maintenance_mensuelle'
+    user: 'root'
+    # 3e lundi de chaque mois à 3h
+    minute: '0'
+    hour: '3'
+    day: '*/100,15-21'
+    weekday: '1'
+    job: '/usr/bin/apt update; /usr/bin/apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade; /sbin/reboot'
