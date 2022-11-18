@@ -1,5 +1,5 @@
 ---
-- name: 'test Cron de maintenance mensuelle automatique'
+- name: 'test Cron de maintenance mensuelle automatique sami'
   cron:
     name: 'Installation mensuelle des mises à jour et redémarrage automatique'
     cron_file: 'maintenance_mensuelle'
